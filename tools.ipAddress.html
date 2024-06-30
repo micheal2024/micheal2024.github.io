@@ -1,0 +1,204 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP地址查询/网络测速</title>
+    <link rel="shortcut icon" href="./img/Micheal.jpg">
+    <link rel="stylesheet" href="https://preview.tabler.io/dist/css/tabler.min.css">
+
+    <script src="https://preview.tabler.io/dist/js/tabler.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+
+    <script src="./js/script.js"></script>
+</head>
+
+<body>
+    <div class="page">
+        <div id="page-header"></div>
+
+        <!-- 内容栏 -->
+        <div class="page-wrapper">
+            <!-- Page body -->
+            <div class="page-body">
+                <div class="container-xl">
+                    <div class="row row-deck row-cards">
+
+                        <!-- 独占12列的元素 -->
+                        <div class="col-12">
+                            <div class="card card-md">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <iframe src="https://ip233.cn/"  hspace="-100" vspace="800" scrolling="no" height="400px"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-header card-header-light">
+                                    <h3 class="card-title" style="width: 100%; text-align: center;"><a href="https://json.geoiplookup.io/">测试1</a></h3>
+                                </div>
+                                <div class="card-body" id="card1" style="width: 100%; text-align: center;">
+                                    <p id="internal-ip" style="font-size: 30px; color:red">0.0.0.0</p>
+                                    <p id="internal-loc">未知</p>
+                                    <p id="internal-org" style="font-size: 5px;">未知</p>
+                                    <p>这是您访问国内网站所使用的IP</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-header card-header-light">
+                                    <h3 class="card-title" style="width: 100%; text-align: center;"><a href="https://www.cloudflare.com/cdn-cgi/trace">测试2</a></h3>
+                                </div>
+                                <div class="card-body" id="card2" style="width: 100%; text-align: center;">
+                                    <p id="internal-ip" style="font-size: 30px; color:red">0.0.0.0</p>
+                                    <p id="internal-loc">未知</p>
+                                    <p id="internal-org" style="font-size: 5px;">未知</p>
+                                    <p>您访问没有被封的国外网站所使用的IP</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-header card-header-light">
+                                    <h3 class="card-title" style="width: 100%; text-align: center;"><a href="https://api.db-ip.com/v2/free/self">测试3</a></h3>
+                                </div>
+                                <div class="card-body" id="card3" style="width: 100%; text-align: center;">
+                                    <p id="internal-ip" style="font-size: 30px; color:red">0.0.0.0</p>
+                                    <p id="internal-loc">未知</p>
+                                    <p id="internal-org" style="font-size: 5px;">未知</p>
+                                    <p>这是您访问谷歌，Facebook，Twitter等网站所使用的IP</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="card">
+                                <div class="card-header card-header-light">
+                                    <h3 class="card-title" style="width: 100%; text-align: center;"><a href="http://whois.pconline.com.cn/ipJson.jsp?callback=ipJson">从国内测试(太平洋网获取电脑)</a></h3>
+                                </div>
+                                <div class="card-body" id="card4" style="width: 100%; text-align: center;">
+                                    <p id="internal-ip" style="font-size: 30px; color:red"></p>
+                                    <p id="internal-loc"></p>
+                                    <p id="internal-org" style="font-size: 5px;"></p>
+                                    <p>这是您访问国内网站所使用的IP</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Traffic summary</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Locations</h3>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        // 参考网址： https://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript
+
+        var url1 = "https://json.geoiplookup.io/";
+        $.ajax({
+            type: "get",
+            url: url1,
+            async: true,
+            success: function(data){
+                var ipJson = data
+                // console.log(ipJson);
+                var ip = ipJson["ip"];
+                var addr = ipJson["continent_name"] +"."+ ipJson["country_name"] +"."+ ipJson["currency_name"];
+                var location = [ipJson["latitude"], ipJson["longitude"]];
+                $("#card1").children("#internal-ip").html(`<a href="${url1}">${ip}</a>`);
+                $("#card1").children("#internal-loc").text(addr);
+                $("#card1").children("#internal-org").text("经纬度位置: "+location);
+            }, 
+            error: function(data){
+                console.log(data);
+            }
+        })
+
+        // 访问没有被封的国外网站
+        var url2 = "https://www.cloudflare.com/cdn-cgi/trace";
+        $.ajax({
+            type: "POST",
+            url: url2,
+            async: true,
+            success: function(data){
+                var ipJson = {};
+                var lines = data.split("\n");
+                for (let line of lines){
+                    ipJson[line.split("=")[0]] = line.split("=")[1]
+                }
+                // console.log(ipJson);
+                $("#card2").children("#internal-ip").html(`<a href="${url2}">${ipJson["ip"]}</a>`);
+                $("#card2").children("#internal-loc").text(ipJson["loc"]);
+                $("#card2").children("#internal-org").text("系统: "+ipJson["uag"]);
+            }, 
+            error: function(data){
+                console.log(data);
+            }
+        })
+                
+        // 访问没有被封的国外网站
+        var url3 = "https://api.db-ip.com/v2/free/self";
+        $.ajax({
+            type: "get",
+            url: url3,
+            async: true,
+            success: function(data){
+                var ipJson = data
+                // console.log(ipJson);
+                var ip = ipJson["ipAddress"];
+                var addr = ipJson["continentCode"] +"."+ ipJson["countryName"] +"."+ ipJson["stateProv"] +"."+ ipJson["city"];
+                var cityCode = ipJson["countryCode"];
+                $("#card3").children("#internal-ip").html(`<a href="${url3}">${ip}</a>`);
+                $("#card3").children("#internal-loc").text(addr);
+                $("#card3").children("#internal-org").text("cityCode: "+cityCode);
+            }, 
+            error: function(data){
+                console.log(data);
+            }
+        })
+
+
+
+        // 太平洋网络IP地址查询Web接口
+        var url4 = "http://whois.pconline.com.cn/ipJson.jsp?callback=ipJson";
+        function ipJson(ipJson) {
+            // console.log('获取到的网络IP',ipJson);
+            var ip = ipJson.ip;
+            var addr = ipJson.addr;
+            var cityCode = ipJson.cityCode;
+            $("#card4").children("#internal-ip").html(`<a href="${url4}">${ip}</a>`);
+            $("#card4").children("#internal-loc").text(addr);
+            $("#card4").children("#internal-org").text("城市码："+cityCode);
+        }
+
+
+    </script>
+
+
+    <script src="//whois.pconline.com.cn/ipJson.jsp?callback=ipJson" type="text/javascript"></script>
+
+</body>
+
+</html>
